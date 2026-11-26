@@ -10,7 +10,8 @@ RUN chmod +x ./gradlew
 COPY src/ ./src/
 # The cache mount keeps ~/.gradle (Gradle distribution + dependencies) between builds,
 # so a source change no longer re-downloads everything.
-RUN --mount=type=cache,target=/root/.gradle \
+# with id to avoid cache collision with other builds, and target to specify the path to cache.
+RUN --mount=type=cache,id=gradle-cache-notifications,target=/root/.gradle \
     ./gradlew --no-daemon bootJar
 
 # Run the packaged application on a JRE-only image.
